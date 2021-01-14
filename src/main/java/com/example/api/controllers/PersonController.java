@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.api.models.Error;
@@ -31,7 +30,7 @@ public class PersonController {
 
 	@Autowired
 	private PersonRepository personRepository;
-
+	
 	@Operation(summary = "Listar pessoas")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Lista de pessoas", content = {
@@ -39,7 +38,7 @@ public class PersonController {
 			@ApiResponse(responseCode = "500", description = "Erro Interno", content = {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = Error.class)) }) })
 	@GetMapping
-	public List<Person> get(@RequestParam(value = "name", defaultValue = "World") String name) {
+	public List<Person> get() {
 		return personRepository.findAll();
 	}
 
