@@ -1,27 +1,31 @@
 package com.example.api.models;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
-
 import io.swagger.v3.oas.annotations.media.Schema;
 
-@Entity(name = "Persons")
 public class Person {
 
 	@Schema(description = "Identificador da pessoa")
-	@Id
-	@SequenceGenerator(name = "student_sequence", sequenceName = "student_sequence", allocationSize = 1)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "student_sequence")
-	@Column(name = "id", updatable = false)
 	public long id;
 
 	@Schema(description = "Nome da pessoa")
-	@Column(name = "name", nullable = false, unique = true)
 	public String name;
+
+	public static com.example.infrastructure.models.Person ToInfra(Person person) {
+		var infraPerson = new com.example.infrastructure.models.Person();
+		
+		infraPerson.setId(person.getId());
+		infraPerson.setName(person.getName());
+
+		return infraPerson;
+	}
+	
+	public Person() {
+	}
+
+	public Person(long id, String name) {
+		this.id = id;
+		this.name = name;
+	}
 
 	public void setId(long id) {
 		this.id = id;
@@ -38,5 +42,4 @@ public class Person {
 	public String getName() {
 		return name;
 	}
-
 }

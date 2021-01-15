@@ -18,7 +18,7 @@ import io.swagger.v3.oas.models.info.License;
 
 @SpringBootApplication()
 @ComponentScan({"com.example"})
-@EntityScan("com.example.api.models")
+@EntityScan("com.example.infrastructure.models")
 @EnableJpaRepositories("com.example.infrastructure.repositories")
 public class DemoSpringApplication {
 

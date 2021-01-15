@@ -30,7 +30,7 @@ public class PersonController {
 
 	@Autowired
 	private PersonRepository personRepository;
-	
+
 	@Operation(summary = "Listar pessoas")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Lista de pessoas", content = {
@@ -39,7 +39,15 @@ public class PersonController {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = Error.class)) }) })
 	@GetMapping
 	public List<Person> get() {
-		return personRepository.findAll();
+		var personsInfra = personRepository.findAll();
+
+		ArrayList<Person> persons = new ArrayList<Person>();
+
+		for (com.example.infrastructure.models.Person person : personsInfra) {
+			persons.add(com.example.infrastructure.models.Person.ToDomain(person));
+		}
+
+		return persons;
 	}
 
 	@Operation(summary = "Criar pessoa")
@@ -50,14 +58,19 @@ public class PersonController {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = Error.class)) }) })
 	@PostMapping
 	public Object post(@RequestBody Person person, HttpServletResponse response) {
-		Person existing = personRepository.findByName(person.getName());
+		com.example.infrastructure.models.Person existing = personRepository.findByName(person.getName());
 
 		if (existing != null) {
-			return existing;
+			return com.example.infrastructure.models.Person.ToDomain(existing);
 		}
 		try {
 
-			return personRepository.save(person);
+			com.example.infrastructure.models.Person toCreatePerson = Person.ToInfra(person);
+
+			var createdPerson = personRepository.save(toCreatePerson);
+
+			return com.example.infrastructure.models.Person.ToDomain(createdPerson);
+
 		} catch (Exception ex) {
 
 			ArrayList<String> errors = new ArrayList<String>();
